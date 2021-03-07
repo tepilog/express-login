@@ -1,7 +1,7 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-function render(req, res, next) {
+const render = (req, res, next) => {
   res.render('index', { title: 'Express', user: req.session.user });
 }
 

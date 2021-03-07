@@ -13,6 +13,7 @@ module.exports = function (req, res, next) {
   // ログアウト
   if (logout) {
     delete req.session.user;
+    // res.redirect('/') // TODO URL修正処理するとエラーログ吐く
   }
 
   // ログイン
