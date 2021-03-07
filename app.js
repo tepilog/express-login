@@ -3,7 +3,9 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const flash = require('connect-flash');
 const logger = require('morgan');
+// const router = express.Router()
 
 const routes = require('./routes/index');
 const users = require('./routes/users');
@@ -20,7 +22,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(session({
   secret: 'session sample',
   resave: false,
@@ -29,10 +30,19 @@ app.use(session({
     maxAge: 180000
   }
 }));
+app.use(flash())
+// app.use(router)
 
 // loginモジュールの適用(ミドルウェア：ログイン, ログアウト, セッション未保持の際に処理発火)
 app.use(login);
-app.use('/', routes);　
+// TODO res.localsの使い方
+// app.use((res, req, next) => {
+  // res.locals.user = res.session.user // ローカルにuser変数を格納。
+  // res.locals.flash = req.flash() // フラッシュ追加(ミドルウェア)
+  // res.locals.test = "test"
+  // next()
+// })
+app.use('/', routes);
 app.use('/logout', routes);
 app.use('/users', users);
 

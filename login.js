@@ -5,10 +5,16 @@ const authInfo = {
 }; 
 
 module.exports = (req, res, next) => {
+
   const method = req.method.toLowerCase();
   const user = req.body;
   const logout = method === "post" && req.url === "/logout";
   const login = method === "post" && user;
+
+  // const url = new URL(req.url)
+  // console.log("method", method, url.pathname) // get , /(パス)
+
+  // req.flash("error", "問題なし")
 
   // ログアウト処理時
   if (logout) {
@@ -19,12 +25,16 @@ module.exports = (req, res, next) => {
 
   // ログイン処理時
   if (login) {
-    if (user.name === authInfo.name && user.pwd === authInfo.pwd) {
+    // Boolean
+    const valid = user.name === authInfo.name && user.pwd === authInfo.pwd;
+    if (valid) {
       // セッションにユーザー情報を保管
       req.session.user = {
         name: user.name,
         pwd: user.pwd,
       };
+    } else {
+      req.flash("error", "ログイン情報に誤りがあります。")
     }
   }
 
