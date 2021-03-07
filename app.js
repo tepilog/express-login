@@ -7,6 +7,7 @@ const logger = require('morgan');
 
 const routes = require('./routes/index');
 const users = require('./routes/users');
+const login = require('./login')
 
 const app = express();
 
@@ -20,20 +21,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// セッション追記部分 (TODO 現状はオンメモリ)
-key = {
-  secret: 'zakuzaku',
+app.use(session({
+  secret: 'session sample',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
     maxAge: 180000
   }
-};
-// セッションを追跡するための設定で、この設定ではオンメモリ
-app.use(session(key));
+}));
 
 // loginモジュールの適用(ミドルウェア：ログイン, ログアウト, セッション未保持の際に処理発火)
-app.use(require('./login')); 
+app.use(login);
 app.use('/', routes);　
 app.use('/logout', routes);
 app.use('/users', users);
