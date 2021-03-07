@@ -3,7 +3,6 @@ const router = express.Router();
 
 const render = (req, res, next) => {
   res.render('index', {
-    title: 'Express',
     user: req.session.user,
     flash: req.flash("error")
   });

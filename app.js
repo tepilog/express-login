@@ -35,13 +35,12 @@ app.use(flash())
 
 // loginモジュールの適用(ミドルウェア：ログイン, ログアウト, セッション未保持の際に処理発火)
 app.use(login);
-// TODO res.localsの使い方
-// app.use((res, req, next) => {
-  // res.locals.user = res.session.user // ローカルにuser変数を格納。
-  // res.locals.flash = req.flash() // フラッシュ追加(ミドルウェア)
-  // res.locals.test = "test"
-  // next()
-// })
+// タイトルをローカル変数化
+app.use((res, req, next) => {
+  app.locals.title = "Express"
+  next()
+})
+
 app.use('/', routes);
 app.use('/logout', routes);
 app.use('/users', users);
