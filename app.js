@@ -2,8 +2,6 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-// ここもexpress の一部から、独立に変更されている
-// const bodyParser = require('body-parser'); 
 const session = require('express-session');
 const logger = require('morgan');
 
@@ -19,20 +17,22 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// セッション追記部分
+// クッキー有効化(routes処理より前に書く。)
+app.use(cookieParser());
+// セッション追記部分 (TODO 現状はオンメモリになっている。)
 key = {
   secret: 'zakuzaku',
   resave: false,
   saveUninitialized: true,
   cookie: {
-  maxAge: 180000
+    maxAge: 180000
   }
 };
 // セッションを追跡するための設定で、この設定ではオンメモリ
 app.use(session(key));
+
 // loginモジュールを通過させる事で、ログインしていないユーザーにコンテンツを参照できなくする(ミドルウェア)
 // console.log("before login module") // 毎回必ず発火する。
 app.use(require('./login')); 
