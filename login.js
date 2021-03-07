@@ -1,7 +1,9 @@
+const crypto = require("crypto")
+
 // TODO ユーザー情報のDB、ハッシュ化
 const authInfo = {
   name: "tepi",
-  pwd: "password",
+  pwd: "5f4dcc3b5aa765d61d8327deb882cf99", // password
 }; 
 
 module.exports = (req, res, next) => {
@@ -25,13 +27,13 @@ module.exports = (req, res, next) => {
 
   // ログイン処理時
   if (login) {
-    // Boolean
-    const valid = user.name === authInfo.name && user.pwd === authInfo.pwd;
+    const password = crypto.createHash("md5").update(user.pwd).digest("hex")
+    const valid = user.name === authInfo.name && password === authInfo.pwd;
     if (valid) {
       // セッションにユーザー情報を保管
       req.session.user = {
         name: user.name,
-        pwd: user.pwd,
+        pwd: password,
       };
     } else {
       req.flash("error", "ログイン情報に誤りがあります。")
